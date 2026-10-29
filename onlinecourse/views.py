@@ -152,18 +152,19 @@ def show_exam_result(request, course_id, submission_id):
 
     selected_choice_ids = [choice.id for choice in submission.choices.all()]
     total_score = 0
-    max_score = 0
+    possible = 0
     for question in course.question_set.all():
-        max_score += question.grade
+        possible += question.grade
         if question.is_get_score(selected_choice_ids):
             total_score += question.grade
 
-    grade = int((total_score / max_score) * 100) if max_score > 0 else 0
+    grade = int((total_score / possible) * 100) if possible > 0 else 0
 
     context['course'] = course
     context['grade'] = grade
     context['score'] = total_score
-    context['max_score'] = max_score
+    context['possible'] = possible
+    context['max_score'] = possible
     context['submission'] = submission
     context['choices'] = submission.choices.all()
     context['selected_ids'] = selected_choice_ids
